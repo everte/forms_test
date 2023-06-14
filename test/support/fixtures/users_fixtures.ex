@@ -17,4 +17,18 @@ defmodule Forms.UsersFixtures do
 
     user
   end
+
+  @doc """
+  Generate a colour.
+  """
+  def colour_fixture(attrs \\ %{}) do
+    {:ok, colour} =
+      attrs
+      |> Enum.into(%{
+        name: "some name"
+      })
+      |> Forms.Users.create_colour()
+
+    colour
+  end
 end

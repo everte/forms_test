@@ -34,6 +34,7 @@
     module={FormsWeb.UserLive.FormComponent}
     id={@user.id || :new}
     title={@page_title}
+    new_user={@new_user}
     action={@live_action}
     user={@user}
     patch={~p"/users"}

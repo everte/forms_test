@@ -11,7 +11,16 @@
 <.list>
   <:item title="Name"><%= @user.name %></:item>
 </.list>
-
+<.table id="nicks" rows={@user.nicknames}>
+  <:col :let={nickname} label="nickname">
+    <%= nickname.nickname %>
+  </:col>
+</.table>
+<.table id="colours" rows={@user.colours}>
+  <:col :let={colour} label="colour">
+    <%= colour.name %>
+  </:col>
+</.table>
 <.back navigate={~p"/users"}>Back to users</.back>
 
 <.modal :if={@live_action == :edit} id="user-modal" show on_cancel={JS.patch(~p"/users/#{@user}")}>

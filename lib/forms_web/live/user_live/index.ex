@@ -17,13 +17,18 @@ defmodule FormsWeb.UserLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit User")
+    |> assign(:new_user, false)
     |> assign(:user, Users.get_user!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New User")
-    |> assign(:user, %User{})
+    |> assign(:new_user, true)
+    |> assign(:user, %User{
+      # nicknames: [%Forms.Users.User.NickName{}],
+      colours: [%Forms.Users.Colour{}]
+    })
   end
 
   defp apply_action(socket, :index, _params) do

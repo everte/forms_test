@@ -22,14 +22,45 @@ defmodule FormsWeb.UserLive.FormComponent do
         <.input field={@form[:name]} type="text" label="Name" />
 
         <h2 class="text-md">Add nicknames</h2>
+        <!-- append={[%Forms.Users.User.NickName{}]} -->
         <.inputs_for :let={f_nested} field={@form[:nicknames]}>
           <div class="flex space-x-2">
-            <input type="hidden" name="list[nicknames_order][]" value={f_nested.index} />
-            <.input field={f_nested[:nickname]} type="text" label="test" placeholder="blah" />
+            <input type="hidden" name="user[nicknames_order][]" value={f_nested.index} />
+            <.input type="text" field={f_nested[:nickname]} />
+            <label class="cursor-pointer">
+              <input
+                type="checkbox"
+                name="user[nicknames_drop][]"
+                class="hidden"
+                value={f_nested.index}
+              />
+              <.icon name="hero-x-mark" />
+            </label>
           </div>
         </.inputs_for>
-        <label>
-          <input type="checkbox" name="list[nicknames_order][]" /> add nickname
+
+        <label class="cursor-pointer mt-4">
+          <input type="checkbox" name="user[nicknames_order][]" class="hidden" />
+          <span class="text-sm text-purple-heart">Add more</span>
+        </label>
+        <!-- <label> -->
+        <!--   <input type="checkbox" name="list[nicknames_order][]" /> add nickname -->
+        <!-- </label> -->
+        <h2 class="text-md">Add colours</h2>
+        <.inputs_for :let={f_c} field={@form[:colours]}>
+          <div class="flex space-x-2">
+            <input type="hidden" name="user[colours_order][]" value={f_c.index} />
+            <.input type="text" field={f_c[:name]} />
+            <label class="cursor-pointer">
+              <input type="checkbox" name="user[colours_drop][]" class="hidden" value={f_c.index} />
+              <.icon name="hero-x-mark" />
+            </label>
+          </div>
+        </.inputs_for>
+
+        <label class="cursor-pointer mt-4">
+          <input type="checkbox" name="user[colours_order][]" class="hidden" />
+          <span class="text-sm text-purple-heart">Add more</span>
         </label>
         <:actions>
           <.button phx-disable-with="Saving...">Save User</.button>
@@ -64,6 +95,8 @@ defmodule FormsWeb.UserLive.FormComponent do
   end
 
   defp save_user(socket, :edit, user_params) do
+    IO.inspect(user_params, label: "edit params")
+
     case Users.update_user(socket.assigns.user, user_params) do
       {:ok, user} ->
         notify_parent({:saved, user})

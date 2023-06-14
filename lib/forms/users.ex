@@ -18,7 +18,8 @@ defmodule Forms.Users do
 
   """
   def list_users do
-    Repo.all(User)
+    query = from u in User, preload: :colours
+    Repo.all(query)
   end
 
   @doc """
@@ -35,7 +36,12 @@ defmodule Forms.Users do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    user = Repo.get!(User, id)
+
+    Repo.preload(user, :colours)
+    |> IO.inspect(label: "preload get user!")
+  end
 
   @doc """
   Creates a user.
@@ -100,5 +106,101 @@ defmodule Forms.Users do
   """
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
+  end
+
+  alias Forms.Users.Colour
+
+  @doc """
+  Returns the list of colours.
+
+  ## Examples
+
+      iex> list_colours()
+      [%Colour{}, ...]
+
+  """
+  def list_colours do
+    Repo.all(Colour)
+  end
+
+  @doc """
+  Gets a single colour.
+
+  Raises `Ecto.NoResultsError` if the Colour does not exist.
+
+  ## Examples
+
+      iex> get_colour!(123)
+      %Colour{}
+
+      iex> get_colour!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_colour!(id), do: Repo.get!(Colour, id)
+
+  @doc """
+  Creates a colour.
+
+  ## Examples
+
+      iex> create_colour(%{field: value})
+      {:ok, %Colour{}}
+
+      iex> create_colour(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_colour(attrs \\ %{}) do
+    %Colour{}
+    |> Colour.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a colour.
+
+  ## Examples
+
+      iex> update_colour(colour, %{field: new_value})
+      {:ok, %Colour{}}
+
+      iex> update_colour(colour, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_colour(%Colour{} = colour, attrs) do
+    colour
+    |> Colour.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a colour.
+
+  ## Examples
+
+      iex> delete_colour(colour)
+      {:ok, %Colour{}}
+
+      iex> delete_colour(colour)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_colour(%Colour{} = colour) do
+    Repo.delete(colour)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking colour changes.
+
+  ## Examples
+
+      iex> change_colour(colour)
+      %Ecto.Changeset{data: %Colour{}}
+
+  """
+  def change_colour(%Colour{} = colour, attrs \\ %{}) do
+    Colour.changeset(colour, attrs)
   end
 end
